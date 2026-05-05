@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 900" width="600" height="900">
+  <rect width="600" height="900" fill="#141414"/>
+  <defs>
+    <radialGradient id="ps2" cx="55%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#1f1f1d"/>
+      <stop offset="100%" stop-color="#141414"/>
+    </radialGradient>
+  </defs>
+  <rect width="600" height="900" fill="url(#ps2)"/>
+  <rect x="0" y="0" width="300" height="900" fill="#131311"/>
+  <rect x="299" y="0" width="2" fill="#1d1d1b" height="900"/>
+  <line x1="300" y1="200" x2="600" y2="160" stroke="#191917" stroke-width="0.5"/>
+  <line x1="300" y1="400" x2="600" y2="380" stroke="#1b1b19" stroke-width="0.5"/>
+  <line x1="300" y1="600" x2="600" y2="590" stroke="#191917" stroke-width="0.5"/>
+  <line x1="300" y1="750" x2="600" y2="760" stroke="#1b1b19" stroke-width="0.5"/>
+</svg>

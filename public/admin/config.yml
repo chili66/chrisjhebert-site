@@ -1,0 +1,70 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# Uncomment for local development: run `npx decap-server` in a separate terminal
+# local_backend: true
+
+media_folder: public/images/uploads
+public_folder: /images/uploads
+
+collections:
+  - name: homepage
+    label: "Homepage — Photo Pool"
+    files:
+      - name: pool
+        label: Photo Pool
+        file: src/content/homepage/pool.json
+        fields:
+          - label: Photos
+            name: photos
+            widget: list
+            summary: "{{fields.series}}"
+            fields:
+              - { label: Image, name: image, widget: image }
+              - { label: Series Name, name: series, widget: string, hint: "Shown bottom-left on the home screen (e.g. 'Urban Geometry')" }
+              - { label: Alt Text, name: alt, widget: string, required: false }
+
+  - name: series
+    label: "Work — Photography Series"
+    folder: src/content/series
+    create: true
+    slug: "{{slug}}"
+    identifier_field: title
+    summary: "{{title}}"
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Cover Image, name: cover, widget: image, hint: "Portrait-oriented image shown in the Work grid" }
+      - label: Images
+        name: images
+        widget: list
+        summary: "{{fields.image}}"
+        fields:
+          - { label: Image, name: image, widget: image }
+          - { label: Alt Text, name: alt, widget: string, required: false }
+
+  - name: projects
+    label: "Projects"
+    folder: src/content/projects
+    create: true
+    slug: "{{slug}}"
+    identifier_field: title
+    summary: "{{title}} ({{year}})"
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Year, name: year, widget: number, value_type: int }
+      - { label: Video URL, name: videoUrl, widget: string, hint: "Paste a YouTube or Vimeo URL (e.g. https://www.youtube.com/watch?v=...)" }
+      - { label: Description, name: description, widget: text, hint: "2–3 sentences shown below the video" }
+      - { label: Display Order, name: order, widget: number, value_type: int, required: false, hint: "Lower numbers appear first" }
+
+  - name: about
+    label: "About"
+    files:
+      - name: bio
+        label: Bio
+        file: src/content/about/bio.md
+        fields:
+          - { label: Name, name: name, widget: string }
+          - { label: Bio, name: body, widget: markdown, hint: "One paragraph" }
+          - { label: LinkedIn URL, name: linkedin, widget: string }
+          - { label: IMDb URL, name: imdb, widget: string }

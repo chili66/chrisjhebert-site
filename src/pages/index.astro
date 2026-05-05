@@ -1,0 +1,713 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+
+const homepageEntry = await getEntry('homepage', 'pool');
+const seriesEntries = (await getCollection('series')).sort((a, b) =>
+  a.data.title.localeCompare(b.data.title)
+);
+const projectEntries = (await getCollection('projects')).sort(
+  (a, b) => (a.data.order ?? 99) - (b.data.order ?? 99)
+);
+const aboutEntry = await getEntry('about', 'bio');
+const { Content: BioCopy } = await aboutEntry.render();
+
+function getEmbedUrl(url: string): string | null {
+  const yt = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s#]+)/);
+  if (yt) return `https://www.youtube.com/embed/${yt[1]}?rel=0&modestbranding=1`;
+  const vm = url.match(/vimeo\.com\/(\d+)/);
+  if (vm) return `https://player.vimeo.com/video/${vm[1]}?title=0&byline=0&portrait=0`;
+  return null;
+}
+
+const siteData = {
+  homepage: homepageEntry.data.photos,
+  series: seriesEntries.map(s => ({
+    id: s.id,
+    title: s.data.title,
+    images: s.data.images,
+  })),
+};
+
+const firstPhoto = homepageEntry.data.photos[0];
+const photoCount = homepageEntry.data.photos.length;
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Chris J. Hebert — Photographer &amp; VFX/AR Artist" />
+  <title>Chris J. Hebert</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet"
+  />
+  <style is:global>
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    ul { list-style: none; }
+    button { cursor: pointer; }
+    img { display: block; }
+
+    /* ── Tokens ── */
+    :root {
+      --bg:       #141414;
+      --fg:       #e8e4dc;
+      --fg-dim:   rgba(232, 228, 220, 0.42);
+      --fg-ghost: rgba(232, 228, 220, 0.035);
+      --sans:     'Inter', system-ui, -apple-system, sans-serif;
+      --mono:     'Space Mono', 'Courier New', monospace;
+      --nav-h:    76px;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--sans);
+      font-size: 14px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ── Nav ── */
+    #main-nav {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 200;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 28px 32px;
+      pointer-events: none;
+    }
+    #main-nav > * { pointer-events: all; }
+
+    .nav-name {
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--fg);
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 28px; }
+    .nav-link {
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--fg-dim);
+      text-decoration: none;
+      transition: color 0.18s ease;
+    }
+    .nav-link:hover,
+    .nav-link[aria-current] { color: var(--fg); }
+
+    /* ── App shell ── */
+    #app {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+    }
+
+    .screen {
+      position: absolute;
+      inset: 0;
+      overflow-y: auto;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.32s ease, visibility 0.32s ease;
+    }
+    .screen.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* ── Home ── */
+    #screen-home { overflow: hidden; }
+
+    .home-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      transition: background-image 0.1s;
+    }
+
+    .home-meta {
+      position: absolute;
+      bottom: 28px;
+      left: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .home-series,
+    .home-counter {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--fg-dim);
+      line-height: 1.4;
+    }
+
+    /* ── Work ── */
+    #screen-work { padding-top: var(--nav-h); }
+
+    .work-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .series-cell {
+      position: relative;
+      aspect-ratio: 2 / 3;
+      overflow: hidden;
+      background: #0f0f0e;
+      border: none;
+      padding: 0;
+    }
+    .series-cover {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.55s ease;
+    }
+    .series-cell:hover .series-cover { transform: scale(1.04); }
+
+    .series-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(12, 12, 11, 0.84);
+      opacity: 0;
+      transition: opacity 0.24s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 22px 20px;
+      gap: 7px;
+    }
+    .series-cell:hover .series-overlay { opacity: 1; }
+
+    .series-overlay-title {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      color: var(--fg);
+    }
+    .series-overlay-count {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--fg-dim);
+    }
+
+    /* ── Projects ── */
+    #screen-projects { padding-top: var(--nav-h); }
+
+    .projects-inner {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 52px 32px 120px;
+    }
+
+    .project { margin-bottom: 100px; }
+    .project:last-child { margin-bottom: 0; }
+
+    .project-video-wrap {
+      position: relative;
+      padding-top: 56.25%;
+      background: #0d0d0c;
+    }
+    .project-video-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    .video-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #1e1e1c;
+    }
+    .video-placeholder span {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(232, 228, 220, 0.18);
+    }
+
+    .project-meta {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-top: 22px;
+      margin-bottom: 12px;
+    }
+    .project-title {
+      font-family: var(--sans);
+      font-size: 17px;
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      color: var(--fg);
+    }
+    .project-year {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: var(--fg-dim);
+    }
+    .project-desc {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.78;
+      color: var(--fg-dim);
+      max-width: 620px;
+    }
+
+    /* ── About ── */
+    #screen-about { overflow: hidden; }
+
+    .about-ghost {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--sans);
+      font-size: clamp(60px, 12.5vw, 196px);
+      font-weight: 300;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      white-space: nowrap;
+      color: var(--fg-ghost);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .about-scroll {
+      position: absolute;
+      inset: 0;
+      overflow-y: auto;
+      display: flex;
+      align-items: center;
+      padding: 100px 48px 80px;
+    }
+    .about-content {
+      position: relative;
+      z-index: 1;
+      max-width: 500px;
+    }
+    .about-bio {
+      font-family: var(--sans);
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.82;
+      color: var(--fg);
+    }
+    .about-bio p { margin: 0; }
+    .about-links {
+      display: flex;
+      gap: 32px;
+      margin-top: 36px;
+    }
+    .about-link {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--fg-dim);
+      text-decoration: none;
+      transition: color 0.18s ease;
+    }
+    .about-link:hover { color: var(--fg); }
+
+    /* ── Lightbox ── */
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background: rgba(9, 9, 8, 0.97);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.22s ease, visibility 0.22s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    #lightbox.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .lb-bar {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      padding: 26px 32px;
+      gap: 16px;
+    }
+    .lb-title {
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--fg-dim);
+    }
+    .lb-counter {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.10em;
+      color: var(--fg-dim);
+      margin-left: auto;
+    }
+    .lb-close {
+      background: none;
+      border: none;
+      color: var(--fg-dim);
+      font-size: 15px;
+      line-height: 1;
+      padding: 4px 0 4px 20px;
+      transition: color 0.18s;
+    }
+    .lb-close:hover { color: var(--fg); }
+
+    .lb-stage {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 80px 48px;
+      min-height: 0;
+    }
+    .lb-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .lb-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      font-family: var(--mono);
+      font-size: 15px;
+      color: var(--fg-dim);
+      padding: 20px 24px;
+      opacity: 0;
+      transition: opacity 0.18s, color 0.18s;
+    }
+    #lightbox:hover .lb-arrow { opacity: 1; }
+    .lb-arrow:hover { color: var(--fg); }
+    .lb-prev { left: 0; }
+    .lb-next { right: 0; }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .work-grid { grid-template-columns: repeat(2, 1fr); }
+      #main-nav { padding: 20px 24px; }
+      .nav-links { gap: 20px; }
+      .projects-inner { padding: 40px 24px 80px; }
+      .about-scroll { padding: 80px 28px 60px; padding-top: 110px; }
+      .lb-stage { padding: 0 56px 40px; }
+    }
+
+    @media (max-width: 480px) {
+      .work-grid { grid-template-columns: 1fr; }
+      .lb-stage { padding: 0 44px 36px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav id="main-nav">
+    <a href="#home" data-screen="home" class="nav-name">Chris J. Hebert</a>
+    <ul class="nav-links">
+      <li><a href="#work"     data-screen="work"     class="nav-link">Work</a></li>
+      <li><a href="#projects" data-screen="projects" class="nav-link">Projects</a></li>
+      <li><a href="#about"    data-screen="about"    class="nav-link">About</a></li>
+    </ul>
+  </nav>
+
+  <!-- App -->
+  <div id="app">
+
+    <!-- HOME -->
+    <section id="screen-home" class="screen active">
+      <div
+        id="home-bg"
+        class="home-bg"
+        style={firstPhoto ? `background-image:url(${firstPhoto.image})` : ''}
+      ></div>
+      <div class="home-meta">
+        <span id="home-series" class="home-series">{firstPhoto?.series ?? ''}</span>
+        <span id="home-counter" class="home-counter">
+          01 / {String(photoCount).padStart(2, '0')}
+        </span>
+      </div>
+    </section>
+
+    <!-- WORK -->
+    <section id="screen-work" class="screen">
+      <div class="work-grid">
+        {seriesEntries.map(s => (
+          <button
+            class="series-cell"
+            data-series-id={s.id}
+            aria-label={`Open ${s.data.title} — ${s.data.images.length} images`}
+          >
+            <div
+              class="series-cover"
+              style={`background-image:url(${s.data.cover})`}
+            ></div>
+            <div class="series-overlay">
+              <span class="series-overlay-title">{s.data.title}</span>
+              <span class="series-overlay-count">
+                {String(s.data.images.length).padStart(2, '0')} images
+              </span>
+            </div>
+          </button>
+        ))}
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="screen-projects" class="screen">
+      <div class="projects-inner">
+        {projectEntries.map(p => {
+          const embed = getEmbedUrl(p.data.videoUrl);
+          return (
+            <article class="project">
+              <div class="project-video-wrap">
+                {embed ? (
+                  <iframe
+                    src={embed}
+                    title={p.data.title}
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    loading="lazy"
+                  ></iframe>
+                ) : (
+                  <div class="video-placeholder">
+                    <span>Add video URL via CMS</span>
+                  </div>
+                )}
+              </div>
+              <div class="project-meta">
+                <h2 class="project-title">{p.data.title}</h2>
+                <span class="project-year">{p.data.year}</span>
+              </div>
+              <p class="project-desc">{p.data.description}</p>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="screen-about" class="screen">
+      <span class="about-ghost" aria-hidden="true">{aboutEntry.data.name}</span>
+      <div class="about-scroll">
+        <div class="about-content">
+          <div class="about-bio">
+            <BioCopy />
+          </div>
+          <div class="about-links">
+            <a
+              href={aboutEntry.data.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="about-link"
+            >LinkedIn →</a>
+            <a
+              href={aboutEntry.data.imdb}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="about-link"
+            >IMDb →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /app -->
+
+  <!-- Lightbox -->
+  <div id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <div class="lb-bar">
+      <span id="lb-title" class="lb-title"></span>
+      <span id="lb-counter" class="lb-counter"></span>
+      <button id="lb-close" class="lb-close" aria-label="Close">✕</button>
+    </div>
+    <div class="lb-stage">
+      <button id="lb-prev" class="lb-arrow lb-prev" aria-label="Previous image">←</button>
+      <img id="lb-img" src="" alt="" class="lb-img" />
+      <button id="lb-next" class="lb-arrow lb-next" aria-label="Next image">→</button>
+    </div>
+  </div>
+
+  <!-- Netlify Identity: redirect to /admin after login -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" is:inline></script>
+  <script is:inline>
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on('init', function(user) {
+        if (!user) {
+          window.netlifyIdentity.on('login', function() {
+            document.location.href = '/admin/';
+          });
+        }
+      });
+    }
+  </script>
+
+  <!-- SPA runtime -->
+  <script is:inline define:vars={{ siteData }}>
+    // ── Screen routing ──────────────────────────────────────────
+    var screens = {
+      home:     document.getElementById('screen-home'),
+      work:     document.getElementById('screen-work'),
+      projects: document.getElementById('screen-projects'),
+      about:    document.getElementById('screen-about'),
+    };
+    var navLinks = document.querySelectorAll('.nav-link');
+
+    function showScreen(name) {
+      if (!screens[name]) name = 'home';
+      Object.keys(screens).forEach(function(id) {
+        var el = screens[id];
+        var isActive = id === name;
+        el.classList.toggle('active', isActive);
+        if (!isActive) el.scrollTop = 0;
+      });
+      navLinks.forEach(function(link) {
+        var isCurrent = link.dataset.screen === name;
+        if (isCurrent) {
+          link.setAttribute('aria-current', 'page');
+        } else {
+          link.removeAttribute('aria-current');
+        }
+      });
+    }
+
+    function navigate(name) {
+      history.pushState({screen: name}, '', '#' + name);
+      showScreen(name);
+    }
+
+    document.querySelectorAll('[data-screen]').forEach(function(el) {
+      el.addEventListener('click', function(e) {
+        e.preventDefault();
+        navigate(el.dataset.screen);
+      });
+    });
+
+    window.addEventListener('popstate', function() {
+      var hash = location.hash.slice(1);
+      showScreen(screens[hash] ? hash : 'home');
+    });
+
+    // ── Random home photo ───────────────────────────────────────
+    var photos = siteData.homepage;
+    if (photos && photos.length > 0) {
+      var idx = Math.floor(Math.random() * photos.length);
+      var photo = photos[idx];
+      document.getElementById('home-bg').style.backgroundImage = 'url(' + photo.image + ')';
+      document.getElementById('home-series').textContent = photo.series;
+      document.getElementById('home-counter').textContent =
+        (idx + 1 < 10 ? '0' : '') + (idx + 1) +
+        ' / ' +
+        (photos.length < 10 ? '0' : '') + photos.length;
+    }
+
+    // ── Lightbox ────────────────────────────────────────────────
+    var lightbox   = document.getElementById('lightbox');
+    var lbImg      = document.getElementById('lb-img');
+    var lbTitle    = document.getElementById('lb-title');
+    var lbCounter  = document.getElementById('lb-counter');
+
+    var activeSeries = null;
+    var activeIndex  = 0;
+
+    function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+    function openLightbox(seriesId) {
+      activeSeries = siteData.series.find(function(s) { return s.id === seriesId; });
+      if (!activeSeries) return;
+      activeIndex = 0;
+      updateLightbox();
+      lightbox.classList.add('active');
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('active');
+    }
+
+    function updateLightbox() {
+      var img = activeSeries.images[activeIndex];
+      lbImg.src      = img.image;
+      lbImg.alt      = img.alt || '';
+      lbTitle.textContent   = activeSeries.title;
+      lbCounter.textContent = pad(activeIndex + 1) + ' / ' + pad(activeSeries.images.length);
+    }
+
+    function prevImage() {
+      activeIndex = (activeIndex - 1 + activeSeries.images.length) % activeSeries.images.length;
+      updateLightbox();
+    }
+
+    function nextImage() {
+      activeIndex = (activeIndex + 1) % activeSeries.images.length;
+      updateLightbox();
+    }
+
+    document.querySelectorAll('.series-cell').forEach(function(el) {
+      el.addEventListener('click', function() { openLightbox(el.dataset.seriesId); });
+    });
+
+    document.getElementById('lb-close').addEventListener('click', closeLightbox);
+    document.getElementById('lb-prev').addEventListener('click', prevImage);
+    document.getElementById('lb-next').addEventListener('click', nextImage);
+
+    lightbox.addEventListener('click', function(e) {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (!lightbox.classList.contains('active')) return;
+      if (e.key === 'Escape')      closeLightbox();
+      if (e.key === 'ArrowLeft')   prevImage();
+      if (e.key === 'ArrowRight')  nextImage();
+    });
+
+    // ── Initial screen from hash ────────────────────────────────
+    (function() {
+      var hash = location.hash.slice(1);
+      showScreen(screens[hash] ? hash : 'home');
+    })();
+  </script>
+
+</body>
+</html>

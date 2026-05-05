@@ -1,0 +1,19 @@
+{
+  "photos": [
+    {
+      "image": "/images/placeholders/ph-home-01.svg",
+      "series": "Urban Geometry",
+      "alt": ""
+    },
+    {
+      "image": "/images/placeholders/ph-home-02.svg",
+      "series": "Light Studies",
+      "alt": ""
+    },
+    {
+      "image": "/images/placeholders/ph-home-03.svg",
+      "series": "Portrait Sessions",
+      "alt": ""
+    }
+  ]
+}
