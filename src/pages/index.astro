@@ -275,6 +275,7 @@ const photoCount = homepageEntry.data.photos.length;
       height: 100%;
       object-fit: cover;
       display: block;
+      z-index: 1;
     }
     .video-play-btn {
       position: absolute;
@@ -288,6 +289,7 @@ const photoCount = homepageEntry.data.photos.length;
       border: none;
       cursor: pointer;
       transition: background-color 0.3s ease;
+      z-index: 2;
     }
     .video-play-btn:hover {
       background: rgba(0, 0, 0, 0.5);
