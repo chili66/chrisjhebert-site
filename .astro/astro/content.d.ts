@@ -166,23 +166,44 @@ declare module 'astro:content' {
 } & { render(): Render[".md"] };
 };
 "series": {
-"light-studies.md": {
-	id: "light-studies.md";
-  slug: "light-studies";
+"barton-stacey.md": {
+	id: "barton-stacey.md";
+  slug: "barton-stacey";
   body: string;
   collection: "series";
   data: InferEntrySchema<"series">
 } & { render(): Render[".md"] };
-"portrait-sessions.md": {
-	id: "portrait-sessions.md";
-  slug: "portrait-sessions";
+"blow-up.md": {
+	id: "blow-up.md";
+  slug: "blow-up";
   body: string;
   collection: "series";
   data: InferEntrySchema<"series">
 } & { render(): Render[".md"] };
-"urban-geometry.md": {
-	id: "urban-geometry.md";
-  slug: "urban-geometry";
+"camping-mirabelle.md": {
+	id: "camping-mirabelle.md";
+  slug: "camping-mirabelle";
+  body: string;
+  collection: "series";
+  data: InferEntrySchema<"series">
+} & { render(): Render[".md"] };
+"extension-of-a-man.md": {
+	id: "extension-of-a-man.md";
+  slug: "extension-of-a-man";
+  body: string;
+  collection: "series";
+  data: InferEntrySchema<"series">
+} & { render(): Render[".md"] };
+"rest-is-noise.md": {
+	id: "rest-is-noise.md";
+  slug: "rest-is-noise";
+  body: string;
+  collection: "series";
+  data: InferEntrySchema<"series">
+} & { render(): Render[".md"] };
+"rhizome.md": {
+	id: "rhizome.md";
+  slug: "rhizome";
   body: string;
   collection: "series";
   data: InferEntrySchema<"series">

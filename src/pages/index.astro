@@ -91,7 +91,7 @@ const photoCount = homepageEntry.data.photos.length;
 
     .nav-name {
       font-family: var(--sans);
-      font-size: 12px;
+      font-size: 21px;
       font-weight: 400;
       letter-spacing: 0.10em;
       text-transform: uppercase;
@@ -101,7 +101,7 @@ const photoCount = homepageEntry.data.photos.length;
     .nav-links { display: flex; gap: 28px; }
     .nav-link {
       font-family: var(--sans);
-      font-size: 12px;
+      font-size: 21px;
       font-weight: 400;
       letter-spacing: 0.10em;
       text-transform: uppercase;
@@ -173,17 +173,18 @@ const photoCount = homepageEntry.data.photos.length;
 
     .series-cell {
       position: relative;
-      aspect-ratio: 2 / 3;
+      aspect-ratio: 3 / 2;
       overflow: hidden;
-      background: #0f0f0e;
+      background: var(--bg);
       border: none;
       padding: 0;
     }
     .series-cover {
       position: absolute;
       inset: 0;
-      background-size: cover;
+      background-size: contain;
       background-position: center;
+      background-repeat: no-repeat;
       transition: transform 0.55s ease;
     }
     .series-cell:hover .series-cover { transform: scale(1.04); }

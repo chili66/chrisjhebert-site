@@ -18,6 +18,7 @@ const series = defineCollection({
   schema: z.object({
     title: z.string(),
     cover: z.string(),
+    aspectRatio: z.string().optional().default('2/3'),
     images: z.array(
       z.object({
         image: z.string(),
