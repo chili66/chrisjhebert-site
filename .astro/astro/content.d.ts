@@ -150,16 +150,51 @@ declare module 'astro:content' {
 } & { render(): Render[".md"] };
 };
 "projects": {
-"magic-leap.md": {
-	id: "magic-leap.md";
-  slug: "magic-leap";
+"ar-tour.md": {
+	id: "ar-tour.md";
+  slug: "ar-tour";
   body: string;
   collection: "projects";
   data: InferEntrySchema<"projects">
 } & { render(): Render[".md"] };
-"spider-man.md": {
-	id: "spider-man.md";
-  slug: "spider-man";
+"magic-leap-assist.md": {
+	id: "magic-leap-assist.md";
+  slug: "magic-leap-assist";
+  body: string;
+  collection: "projects";
+  data: InferEntrySchema<"projects">
+} & { render(): Render[".md"] };
+"magic-leap-spectator.md": {
+	id: "magic-leap-spectator.md";
+  slug: "magic-leap-spectator";
+  body: string;
+  collection: "projects";
+  data: InferEntrySchema<"projects">
+} & { render(): Render[".md"] };
+"magic-leap-wildfire.md": {
+	id: "magic-leap-wildfire.md";
+  slug: "magic-leap-wildfire";
+  body: string;
+  collection: "projects";
+  data: InferEntrySchema<"projects">
+} & { render(): Render[".md"] };
+"magic-leap-workshop.md": {
+	id: "magic-leap-workshop.md";
+  slug: "magic-leap-workshop";
+  body: string;
+  collection: "projects";
+  data: InferEntrySchema<"projects">
+} & { render(): Render[".md"] };
+"mica.md": {
+	id: "mica.md";
+  slug: "mica";
+  body: string;
+  collection: "projects";
+  data: InferEntrySchema<"projects">
+} & { render(): Render[".md"] };
+"seven-ages-of-man.md": {
+	id: "seven-ages-of-man.md";
+  slug: "seven-ages-of-man";
   body: string;
   collection: "projects";
   data: InferEntrySchema<"projects">
