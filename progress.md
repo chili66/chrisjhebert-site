@@ -23,7 +23,7 @@
   - Extension of a Man (9 images)
   - Rest Is Noise (5 images)
   - Rhizome (9 images)
-- ✅ `projects/` — Spider-Man and Magic Leap with video embeds
+- ✅ `projects/` — 7 real projects with professional video embeds
 - ✅ `about/` — bio, LinkedIn, and IMDb links (with real profile info added)
 
 ### Features
@@ -34,17 +34,34 @@
 - ✅ Hover overlays on series cells with title + image count
 - ✅ All 109 images organized in `public/images/` subdirectories
 
+### Projects & Videos
+- ✅ 7 projects implemented:
+  1. Magic Leap Workshop (YouTube)
+  2. Magic Leap Assist (YouTube)
+  3. Magic Leap Wildfire (Vimeo)
+  4. Magic Leap Spectator (YouTube)
+  5. AR Tour (Vimeo)
+  6. Mica (2 Vimeo videos, vertically stacked)
+  7. The Seven Ages of Man (YouTube)
+- ✅ Mica dual-video layout: vertical stacking for larger playback
+- ✅ Click-to-play video overlay functionality:
+  - Custom poster frames extracted from each video (8 total frames)
+  - Play button overlay with hover effects
+  - Smooth transition from poster to embedded iframe on click
+  - Improves page performance (videos load on-demand, not on page load)
+- ✅ All video embeds properly converted (YouTube embed URLs, Vimeo player URLs)
+
 ### Build & Deployment
 - ✅ Local dev server running (`npm run dev`)
 - ✅ Production build tested and passing (`npm run build`)
 - ✅ Git repository initialized at [chili66/chrisjhebert-site](https://github.com/chili66/chrisjhebert-site)
-- ✅ Latest changes committed and pushed to main
+- ✅ All changes committed and pushed to main
 
 ---
 
 ## Next Steps
 
-### 1. Connect to Netlify (Required to Go Live)
+### 1. Connect to Netlify (Required to Go Live) — IN PROGRESS
 - [ ] Visit [app.netlify.com](https://app.netlify.com)
 - [ ] Click **Add new site → Import an existing project → GitHub**
 - [ ] Select **chili66/chrisjhebert-site**
@@ -63,14 +80,10 @@
 - [ ] Format: each photo needs `image` path (under `/images/`) and `series` label
 - [ ] Test: reload home, should show random photo from pool on each visit
 
-### 4. Projects
-- [ ] Replace YouTube/Vimeo placeholder URLs in `src/content/projects/`
-- [ ] Verify embeds render correctly in preview
-
-### 5. (Optional) CMS Fine-Tuning
+### 4. (Optional) CMS Fine-Tuning
 - [ ] Test uploading a new series cover via CMS `/admin`
 - [ ] Confirm automatic git commits and image storage in `/images/uploads/`
-- [ ] Train team members on editing flows if needed
+- [ ] Optimize poster images for web (current YouTube screenshots are large; can compress during Netlify setup)
 
 ---
 
@@ -102,5 +115,6 @@
 
 - **Session 1**: Scaffold, build SPA, create placeholder series → ✅
 - **Session 2**: Add real photography series, tune design → ✅
-- **Session 3**: Deploy to Netlify, enable CMS, launch live → ⏳ Next
+- **Session 3**: Add 7 real projects, implement click-to-play video thumbnails → ✅
+- **Session 4**: Deploy to Netlify, enable CMS, launch live → ⏳ Next
 
