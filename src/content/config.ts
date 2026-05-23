@@ -35,6 +35,8 @@ const projects = defineCollection({
     year: z.number().optional(),
     videoUrl: z.string().optional(),
     videoUrls: z.array(z.string()).optional(),
+    posterImage: z.string().optional(),
+    posterImages: z.array(z.string()).optional(),
     description: z.string(),
     order: z.number().optional().default(99),
   }),

@@ -258,6 +258,53 @@ const photoCount = homepageEntry.data.photos.length;
     .project-video-wrap iframe {
       border: 0;
     }
+
+    /* Click-to-play video styling */
+    .video-container {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      cursor: pointer;
+      overflow: hidden;
+      background: #0d0d0c;
+    }
+    .video-poster {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .video-play-btn {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.3);
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .video-play-btn:hover {
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .video-play-btn svg {
+      width: 80px;
+      height: 80px;
+      color: #e8e4dc;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+    }
+    .video-container iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
     .video-placeholder {
       position: absolute;
       inset: 0;
@@ -517,20 +564,48 @@ const photoCount = homepageEntry.data.photos.length;
       <div class="projects-inner">
         {projectEntries.map(p => {
           const videoUrls = p.data.videoUrls || (p.data.videoUrl ? [p.data.videoUrl] : []);
+          const posterImages = p.data.posterImages || (p.data.posterImage ? [p.data.posterImage] : []);
           const embeds = videoUrls.map(url => getEmbedUrl(url)).filter(Boolean);
+          const hasPosterImages = posterImages.length > 0;
           return (
             <article class="project">
               <div class="project-video-wrap" data-video-count={embeds.length}>
                 {embeds.length > 0 ? (
-                  embeds.map((embed, idx) => (
-                    <iframe
-                      key={idx}
-                      src={embed}
-                      title={`${p.data.title} - Video ${idx + 1}`}
-                      allow="autoplay; fullscreen; picture-in-picture"
-                      loading="lazy"
-                    ></iframe>
-                  ))
+                  embeds.map((embed, idx) => {
+                    const posterImage = posterImages[idx];
+                    const videoId = `video-${p.id}-${idx}`;
+                    return (
+                      <div key={idx} class="video-container" data-video-id={videoId} data-embed-src={embed}>
+                        {hasPosterImages && posterImage ? (
+                          <>
+                            <img
+                              src={posterImage}
+                              alt={`${p.data.title} - Video ${idx + 1}`}
+                              class="video-poster"
+                              data-poster
+                            />
+                            <button
+                              class="video-play-btn"
+                              aria-label="Play video"
+                              data-play-btn={videoId}
+                            >
+                              <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5v14l11-7z"/>
+                              </svg>
+                            </button>
+                          </>
+                        ) : (
+                          <iframe
+                            id={videoId}
+                            src={embed}
+                            title={`${p.data.title} - Video ${idx + 1}`}
+                            allow="autoplay; fullscreen; picture-in-picture"
+                            loading="lazy"
+                          ></iframe>
+                        )}
+                      </div>
+                    );
+                  })
                 ) : (
                   <div class="video-placeholder">
                     <span>Add video URL via CMS</span>
@@ -721,6 +796,29 @@ const photoCount = homepageEntry.data.photos.length;
       if (e.key === 'Escape')      closeLightbox();
       if (e.key === 'ArrowLeft')   prevImage();
       if (e.key === 'ArrowRight')  nextImage();
+    });
+
+    // ── Click-to-play video functionality ────────────────────────
+    document.querySelectorAll('[data-play-btn]').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var videoId = this.getAttribute('data-play-btn');
+        var container = this.closest('.video-container');
+        var embedSrc = container.getAttribute('data-embed-src');
+
+        // Remove poster image and play button
+        container.querySelector('[data-poster]')?.remove();
+        this.remove();
+
+        // Create and insert iframe
+        var iframe = document.createElement('iframe');
+        iframe.id = videoId;
+        iframe.src = embedSrc;
+        iframe.title = container.getAttribute('data-embed-src');
+        iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+        iframe.loading = 'lazy';
+        container.appendChild(iframe);
+      });
     });
 
     // ── Initial screen from hash ────────────────────────────────
