@@ -527,17 +527,17 @@ const photoCount = homepageEntry.data.photos.length;
 
     <!-- HOME -->
     <section id="screen-home" class="screen active">
-      <div
-        id="home-bg"
-        class="home-bg"
-        style={firstPhoto ? `background-image:url(${firstPhoto.image})` : ''}
-      ></div>
       <div class="home-meta">
         <span id="home-series" class="home-series">{firstPhoto?.series ?? ''}</span>
         <span id="home-counter" class="home-counter">
           01 / {String(photoCount).padStart(2, '0')}
         </span>
       </div>
+      <div
+        id="home-bg"
+        class="home-bg"
+        style={firstPhoto ? `background-image:url(${firstPhoto.image})` : ''}
+      ></div>
     </section>
 
     <!-- WORK -->
