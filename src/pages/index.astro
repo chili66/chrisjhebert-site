@@ -133,21 +133,16 @@ const photoCount = homepageEntry.data.photos.length;
     }
 
     /* ── Home ── */
-    #screen-home { overflow: hidden; }
-
-    .home-bg {
-      position: absolute;
-      inset: 0;
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      transition: background-image 0.1s;
+    #screen-home {
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
     .home-meta {
-      position: absolute;
-      bottom: 28px;
-      left: 32px;
+      flex-shrink: 0;
+      padding: 28px 32px;
+      background: var(--bg);
       display: flex;
       flex-direction: column;
       gap: 5px;
@@ -160,6 +155,14 @@ const photoCount = homepageEntry.data.photos.length;
       text-transform: uppercase;
       color: var(--fg-dim);
       line-height: 1.4;
+    }
+
+    .home-bg {
+      flex: 1;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      transition: background-image 0.1s;
     }
 
     /* ── Work ── */
