@@ -76,9 +76,9 @@
 - [ ] Visit `/admin` to test CMS access
 
 ### 3. Home Page Pool
-- [ ] Add real photos to `src/content/homepage/pool.json`
-- [ ] Format: each photo needs `image` path (under `/images/`) and `series` label
-- [ ] Test: reload home, should show random photo from pool on each visit
+- [x] Add real photos to `src/content/homepage/pool.json` — 12 photos from all series
+- [x] Format: each photo has `image` path (under `/images/`) and `series` label
+- [x] Test: homepage shows random photo from pool on each visit (counter updates: e.g., "05 / 12")
 
 ### 4. (Optional) CMS Fine-Tuning
 - [ ] Test uploading a new series cover via CMS `/admin`
