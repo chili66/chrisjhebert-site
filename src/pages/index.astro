@@ -227,13 +227,11 @@ const photoCount = homepageEntry.data.photos.length;
     }
     .project-video-wrap[data-video-count="1"] {
       position: relative;
-      padding-top: 56.25%;
     }
     .project-video-wrap[data-video-count="1"] iframe {
-      position: absolute;
-      inset: 0;
+      position: relative;
       width: 100%;
-      height: 100%;
+      aspect-ratio: 16 / 9;
       border: 0;
     }
     .project-video-wrap[data-video-count="2"] {
@@ -367,7 +365,7 @@ const photoCount = homepageEntry.data.photos.length;
       overflow-y: auto;
       display: flex;
       align-items: center;
-      padding: 100px 48px 80px;
+      padding: 50px 48px 80px;
     }
     .about-content {
       position: relative;
