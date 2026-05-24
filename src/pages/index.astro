@@ -344,9 +344,8 @@ const photoCount = homepageEntry.data.photos.length;
 
     .about-ghost {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      top: 120px;
+      left: 48px;
       font-family: var(--sans);
       font-size: clamp(60px, 12.5vw, 196px);
       font-weight: 300;
@@ -364,8 +363,9 @@ const photoCount = homepageEntry.data.photos.length;
       inset: 0;
       overflow-y: auto;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       padding: 50px 48px 80px;
+      padding-top: 120px;
     }
     .about-content {
       position: relative;
@@ -469,7 +469,7 @@ const photoCount = homepageEntry.data.photos.length;
       background: none;
       border: none;
       font-family: var(--mono);
-      font-size: 60px;
+      font-size: 30px;
       color: var(--fg-dim);
       padding: 20px 24px;
       opacity: 0;
@@ -503,8 +503,8 @@ const photoCount = homepageEntry.data.photos.length;
   <nav id="main-nav">
     <a href="#home" data-screen="home" class="nav-name">Chris J. Hebert</a>
     <ul class="nav-links">
-      <li><a href="#work"     data-screen="work"     class="nav-link">Work</a></li>
-      <li><a href="#projects" data-screen="projects" class="nav-link">Projects</a></li>
+      <li><a href="#work"     data-screen="work"     class="nav-link">Projects</a></li>
+      <li><a href="#projects" data-screen="projects" class="nav-link">Work</a></li>
       <li><a href="#about"    data-screen="about"    class="nav-link">About</a></li>
     </ul>
   </nav>
