@@ -11,11 +11,11 @@ const projectEntries = (await getCollection('projects')).sort(
 const aboutEntry = await getEntry('about', 'bio');
 const { Content: BioCopy } = await aboutEntry.render();
 
-function getEmbedUrl(url: string): string | null {
+function getEmbedUrl(url: string, autoplay: boolean = false): string | null {
   const yt = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s#]+)/);
-  if (yt) return `https://www.youtube.com/embed/${yt[1]}?rel=0&modestbranding=1`;
+  if (yt) return `https://www.youtube.com/embed/${yt[1]}?rel=0&modestbranding=1${autoplay ? '&autoplay=1' : ''}`;
   const vm = url.match(/vimeo\.com\/(\d+)/);
-  if (vm) return `https://player.vimeo.com/video/${vm[1]}?title=0&byline=0&portrait=0`;
+  if (vm) return `https://player.vimeo.com/video/${vm[1]}?title=0&byline=0&portrait=0${autoplay ? '&autoplay=1' : ''}`;
   return null;
 }
 
@@ -151,6 +151,7 @@ const photoCount = homepageEntry.data.photos.length;
       background-position: center;
       background-repeat: no-repeat;
       transition: background-image 0.1s;
+      background-image: none !important;
     }
 
     /* ── Work ── */
@@ -222,7 +223,6 @@ const photoCount = homepageEntry.data.photos.length;
     .project:last-child { margin-bottom: 0; }
 
     .project-video-wrap {
-      background: #0d0d0c;
       display: grid;
       gap: 16px;
     }
@@ -359,6 +359,7 @@ const photoCount = homepageEntry.data.photos.length;
       color: var(--fg-ghost);
       pointer-events: none;
       user-select: none;
+      display: none;
     }
 
     .about-scroll {
@@ -372,7 +373,7 @@ const photoCount = homepageEntry.data.photos.length;
     .about-content {
       position: relative;
       z-index: 1;
-      max-width: 500px;
+      max-width: 667px;
     }
     .about-bio {
       font-family: var(--sans);
@@ -389,7 +390,7 @@ const photoCount = homepageEntry.data.photos.length;
     }
     .about-link {
       font-family: var(--mono);
-      font-size: 10px;
+      font-size: 20px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--fg-dim);
@@ -452,14 +453,15 @@ const photoCount = homepageEntry.data.photos.length;
       flex: 1;
       position: relative;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
       padding: 0 80px 48px;
       min-height: 0;
+      padding-top: 40px;
     }
     .lb-img {
       max-width: 100%;
-      max-height: 100%;
+      max-height: 90vh;
       object-fit: contain;
     }
 
@@ -470,11 +472,12 @@ const photoCount = homepageEntry.data.photos.length;
       background: none;
       border: none;
       font-family: var(--mono);
-      font-size: 15px;
+      font-size: 60px;
       color: var(--fg-dim);
       padding: 20px 24px;
       opacity: 0;
       transition: opacity 0.18s, color 0.18s;
+      line-height: 1;
     }
     #lightbox:hover .lb-arrow { opacity: 1; }
     .lb-arrow:hover { color: var(--fg); }
@@ -518,7 +521,6 @@ const photoCount = homepageEntry.data.photos.length;
       <div
         id="home-bg"
         class="home-bg"
-        style={firstPhoto ? `background-image:url(${firstPhoto.image})` : ''}
       ></div>
     </section>
 
@@ -788,6 +790,9 @@ const photoCount = homepageEntry.data.photos.length;
         var container = this.closest('.video-container');
         var embedSrc = container.getAttribute('data-embed-src');
 
+        // Add autoplay parameter to the embed URL
+        var autoplaySrc = embedSrc + (embedSrc.includes('?') ? '&' : '?') + 'autoplay=1';
+
         // Remove poster image and play button
         container.querySelector('[data-poster]')?.remove();
         this.remove();
@@ -795,7 +800,7 @@ const photoCount = homepageEntry.data.photos.length;
         // Create and insert iframe
         var iframe = document.createElement('iframe');
         iframe.id = videoId;
-        iframe.src = embedSrc;
+        iframe.src = autoplaySrc;
         iframe.title = container.getAttribute('data-embed-src');
         iframe.allow = 'autoplay; fullscreen; picture-in-picture';
         iframe.loading = 'lazy';
