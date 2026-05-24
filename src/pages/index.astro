@@ -133,32 +133,11 @@ const photoCount = homepageEntry.data.photos.length;
     }
 
     /* ── Home ── */
-    #screen-home {
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .home-meta {
-      flex-shrink: 0;
-      padding: 28px 32px;
-      background: var(--bg);
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-    .home-series,
-    .home-counter {
-      font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--fg-dim);
-      line-height: 1.4;
-    }
+    #screen-home { overflow: hidden; }
 
     .home-bg {
-      flex: 1;
+      position: absolute;
+      inset: 0;
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -527,12 +506,6 @@ const photoCount = homepageEntry.data.photos.length;
 
     <!-- HOME -->
     <section id="screen-home" class="screen active">
-      <div class="home-meta">
-        <span id="home-series" class="home-series">{firstPhoto?.series ?? ''}</span>
-        <span id="home-counter" class="home-counter">
-          01 / {String(photoCount).padStart(2, '0')}
-        </span>
-      </div>
       <div
         id="home-bg"
         class="home-bg"
@@ -736,11 +709,6 @@ const photoCount = homepageEntry.data.photos.length;
       var idx = Math.floor(Math.random() * photos.length);
       var photo = photos[idx];
       document.getElementById('home-bg').style.backgroundImage = 'url(' + photo.image + ')';
-      document.getElementById('home-series').textContent = photo.series;
-      document.getElementById('home-counter').textContent =
-        (idx + 1 < 10 ? '0' : '') + (idx + 1) +
-        ' / ' +
-        (photos.length < 10 ? '0' : '') + photos.length;
     }
 
     // ── Lightbox ────────────────────────────────────────────────
