@@ -6,6 +6,6 @@ videoUrls:
 posterImages:
   - "/images/posters/mica-video-1.jpg"
   - "/images/posters/mica-video-2.jpg"
-description: "Mica is a photoreal, virtual human driven by a sophisticated AI framework that drives a highly realistic gaze system, enabling compelling one-on-one experiences that observe the social cues of human interaction. Created for Magic Leap 1, several iterations of the experience played at venues such as Sundance, The Game Developer's Conference, The Future of Everything Festival, The Future Investment Initiative, and others."
+description: "Mica is a photoreal, virtual human brought to life by a sophisticated AI framework that drives a highly realistic gaze system, enabling compelling one-on-one experiences that observe the social cues of human interaction. Created for Magic Leap 1, Mica was experienced by festival goers at Sundance, The Game Developer's Conference, The Future of Everything Festival, The Future Investment Initiative, and others."
 order: 6
 ---
