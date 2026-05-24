@@ -1,19 +1,65 @@
 {
   "photos": [
     {
-      "image": "/images/placeholders/ph-home-01.svg",
-      "series": "Urban Geometry",
+      "image": "/images/barton_stacey/web/barton_stacey_lr.0004.jpg",
+      "series": "Barton Stacey",
       "alt": ""
     },
     {
-      "image": "/images/placeholders/ph-home-02.svg",
-      "series": "Light Studies",
+      "image": "/images/barton_stacey/web/barton_stacey_lr.0007.jpg",
+      "series": "Barton Stacey",
       "alt": ""
     },
     {
-      "image": "/images/placeholders/ph-home-03.svg",
-      "series": "Portrait Sessions",
+      "image": "/images/blow_up/blow_up.02.jpg",
+      "series": "Blow Up",
+      "alt": ""
+    },
+    {
+      "image": "/images/blow_up/blow_up.11.jpg",
+      "series": "Blow Up",
+      "alt": ""
+    },
+    {
+      "image": "/images/camping_mirabelle/mirabelle_selects_lr.0002.jpg",
+      "series": "Camping Mirabelle",
+      "alt": ""
+    },
+    {
+      "image": "/images/camping_mirabelle/mirabelle_selects_lr.0022.jpg",
+      "series": "Camping Mirabelle",
+      "alt": ""
+    },
+    {
+      "image": "/images/extension_of_a_man/fela_kuti.jpg",
+      "series": "Extension of a Man",
+      "alt": ""
+    },
+    {
+      "image": "/images/extension_of_a_man/linton_kwesi_johnson.jpg",
+      "series": "Extension of a Man",
+      "alt": ""
+    },
+    {
+      "image": "/images/rest_is_noise/rest_is_noise_0001.jpg",
+      "series": "The Rest is Noise",
+      "alt": ""
+    },
+    {
+      "image": "/images/rest_is_noise/rest_is_noise_0002.jpg",
+      "series": "The Rest is Noise",
+      "alt": ""
+    },
+    {
+      "image": "/images/rhizome/rhizome_web_0002.jpg",
+      "series": "Rhizome",
+      "alt": ""
+    },
+    {
+      "image": "/images/rhizome/rhizome_web_0003.jpg",
+      "series": "Rhizome",
       "alt": ""
     }
   ]
 }
+  
