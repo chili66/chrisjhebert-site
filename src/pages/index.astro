@@ -133,11 +133,20 @@ const photoCount = homepageEntry.data.photos.length;
     }
 
     /* ── Home ── */
-    #screen-home { overflow: hidden; }
+    #screen-home {
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .home-meta {
+      flex-shrink: 0;
+      height: 76px;
+      background: var(--bg);
+    }
 
     .home-bg {
-      position: absolute;
-      inset: 0;
+      flex: 1;
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -506,6 +515,7 @@ const photoCount = homepageEntry.data.photos.length;
 
     <!-- HOME -->
     <section id="screen-home" class="screen active">
+      <div class="home-meta"></div>
       <div
         id="home-bg"
         class="home-bg"
