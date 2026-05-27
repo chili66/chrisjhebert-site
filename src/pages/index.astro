@@ -173,7 +173,7 @@ const photoCount = homepageEntry.data.photos.length;
     .series-cover {
       position: absolute;
       inset: 0;
-      background-size: contain;
+      background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
       transition: transform 0.55s ease;
@@ -364,7 +364,7 @@ const photoCount = homepageEntry.data.photos.length;
       overflow-y: auto;
       display: flex;
       align-items: flex-start;
-      padding: 50px 48px 80px;
+      padding: 50px 32px 80px;
       padding-top: 120px;
     }
     .about-content {
@@ -450,15 +450,15 @@ const photoCount = homepageEntry.data.photos.length;
       flex: 1;
       position: relative;
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       justify-content: center;
       padding: 0 80px 48px;
       min-height: 0;
       padding-top: 40px;
     }
     .lb-img {
-      max-width: 100%;
-      max-height: 90vh;
+      max-width: min(100%, calc(100vh - 160px));
+      max-height: calc(100vh - 160px);
       object-fit: contain;
     }
 
@@ -487,7 +487,7 @@ const photoCount = homepageEntry.data.photos.length;
       #main-nav { padding: 20px 24px; }
       .nav-links { gap: 20px; }
       .projects-inner { padding: 40px 24px 80px; }
-      .about-scroll { padding: 80px 28px 60px; padding-top: 110px; }
+      .about-scroll { padding: 80px 24px 60px; padding-top: 110px; }
       .lb-stage { padding: 0 56px 40px; }
     }
 
