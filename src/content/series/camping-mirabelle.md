@@ -1,5 +1,6 @@
 ---
 title: Camping Mirabelle
+order: 4
 cover: /images/camping_mirabelle/mirabelle_selects_lr.0001.jpg
 aspectRatio: "3/2"
 images:

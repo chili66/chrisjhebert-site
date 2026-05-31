@@ -3,7 +3,7 @@ import { getCollection, getEntry } from 'astro:content';
 
 const homepageEntry = await getEntry('homepage', 'pool');
 const seriesEntries = (await getCollection('series')).sort((a, b) =>
-  a.data.title.localeCompare(b.data.title)
+  (a.data.order ?? 99) - (b.data.order ?? 99)
 );
 const projectEntries = (await getCollection('projects')).sort(
   (a, b) => (a.data.order ?? 99) - (b.data.order ?? 99)
@@ -101,7 +101,7 @@ const photoCount = homepageEntry.data.photos.length;
     .nav-links { display: flex; gap: 28px; }
     .nav-link {
       font-family: var(--sans);
-      font-size: 21px;
+      font-size: 18.9px;
       font-weight: 400;
       letter-spacing: 0.10em;
       text-transform: uppercase;
@@ -145,13 +145,22 @@ const photoCount = homepageEntry.data.photos.length;
       background: var(--bg);
     }
 
-    .home-bg {
+    .home-stack {
       flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-height: 0;
+    }
+    .home-panel {
+      flex: 1;
+      min-height: 0;
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      transition: background-image 0.1s;
     }
+    /* Single image on desktop; the stack is mobile-only (see media query) */
+    .home-panel:nth-child(n + 2) { display: none; }
 
     /* ── Work ── */
     #screen-work { padding-top: var(--nav-h); }
@@ -380,6 +389,7 @@ const photoCount = homepageEntry.data.photos.length;
       color: var(--fg);
     }
     .about-bio p { margin: 0; }
+    .about-bio p + p { margin-top: 1.2em; }
     .about-links {
       display: flex;
       gap: 32px;
@@ -452,48 +462,63 @@ const photoCount = homepageEntry.data.photos.length;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0 80px 48px;
+      padding: 0;
       min-height: 0;
-      padding-top: 40px;
     }
     .lb-img {
-      max-width: min(100%, calc(100vh - 160px));
-      max-height: calc(100vh - 160px);
+      width: 100%;
+      height: 100%;
       object-fit: contain;
     }
 
+    .lb-nav {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 56px;
+      padding: 18px 0 30px;
+    }
     .lb-arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
       background: none;
       border: none;
       font-family: var(--mono);
       font-size: 30px;
       color: var(--fg-dim);
-      padding: 20px 24px;
-      opacity: 0;
-      transition: opacity 0.18s, color 0.18s;
+      padding: 8px 28px;
+      transition: color 0.18s;
       line-height: 1;
     }
-    #lightbox:hover .lb-arrow { opacity: 1; }
     .lb-arrow:hover { color: var(--fg); }
-    .lb-prev { left: 0; }
-    .lb-next { right: 0; }
 
     /* ── Responsive ── */
     @media (max-width: 768px) {
       .work-grid { grid-template-columns: repeat(2, 1fr); }
-      #main-nav { padding: 20px 24px; }
-      .nav-links { gap: 20px; }
+      #main-nav {
+        padding: 22px 20px;
+        align-items: center;
+        flex-wrap: nowrap;
+      }
+      .nav-name {
+        font-size: 15px;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+      }
+      .nav-links { gap: 16px; }
+      .nav-link {
+        font-size: 11.7px;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+      }
+      /* Stacked triptych on mobile */
+      .home-panel:nth-child(n + 2) { display: block; }
       .projects-inner { padding: 40px 24px 80px; }
       .about-scroll { padding: 80px 24px 60px; padding-top: 110px; }
-      .lb-stage { padding: 0 56px 40px; }
     }
 
     @media (max-width: 480px) {
       .work-grid { grid-template-columns: 1fr; }
-      .lb-stage { padding: 0 44px 36px; }
+      .nav-links { gap: 13px; }
     }
   </style>
 </head>
@@ -515,10 +540,11 @@ const photoCount = homepageEntry.data.photos.length;
     <!-- HOME -->
     <section id="screen-home" class="screen active">
       <div class="home-meta"></div>
-      <div
-        id="home-bg"
-        class="home-bg"
-      ></div>
+      <div class="home-stack">
+        <div class="home-panel" data-home-panel></div>
+        <div class="home-panel" data-home-panel></div>
+        <div class="home-panel" data-home-panel></div>
+      </div>
     </section>
 
     <!-- WORK -->
@@ -645,9 +671,11 @@ const photoCount = homepageEntry.data.photos.length;
       <button id="lb-close" class="lb-close" aria-label="Close">✕</button>
     </div>
     <div class="lb-stage">
-      <button id="lb-prev" class="lb-arrow lb-prev" aria-label="Previous image">←</button>
       <img id="lb-img" src="" alt="" class="lb-img" />
-      <button id="lb-next" class="lb-arrow lb-next" aria-label="Next image">→</button>
+    </div>
+    <div class="lb-nav">
+      <button id="lb-prev" class="lb-arrow" aria-label="Previous image">←</button>
+      <button id="lb-next" class="lb-arrow" aria-label="Next image">→</button>
     </div>
   </div>
 
@@ -711,12 +739,34 @@ const photoCount = homepageEntry.data.photos.length;
       showScreen(screens[hash] ? hash : 'home');
     });
 
-    // ── Random home photo ───────────────────────────────────────
+    // ── Random home photos (3 stacked, no recent repeats) ──────
     var photos = siteData.homepage;
-    if (photos && photos.length > 0) {
-      var idx = Math.floor(Math.random() * photos.length);
-      var photo = photos[idx];
-      document.getElementById('home-bg').style.backgroundImage = 'url(' + photo.image + ')';
+    var panels = document.querySelectorAll('[data-home-panel]');
+    if (photos && photos.length > 0 && panels.length) {
+      var HISTORY_KEY = 'cjh_recent_photos';
+      var HISTORY_SIZE = 6;
+      var recent = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+      // Stacked triptych on mobile only; a single image on larger screens
+      var isMobile = window.matchMedia('(max-width: 768px)').matches;
+      var count = isMobile ? panels.length : 1;
+      // Prefer images not shown recently
+      var available = photos.filter(function(p) { return recent.indexOf(p.image) === -1; });
+      var picks = [];
+      for (var n = 0; n < count; n++) {
+        // Top up from photos not already picked this round if we run dry
+        if (available.length === 0) {
+          available = photos.filter(function(p) { return picks.indexOf(p) === -1; });
+        }
+        if (available.length === 0) break;
+        var i = Math.floor(Math.random() * available.length);
+        picks.push(available.splice(i, 1)[0]);
+      }
+      picks.forEach(function(photo, idx) {
+        panels[idx].style.backgroundImage = 'url(' + photo.image + ')';
+        recent.push(photo.image);
+      });
+      while (recent.length > HISTORY_SIZE) recent.shift();
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(recent));
     }
 
     // ── Lightbox ────────────────────────────────────────────────
@@ -771,6 +821,24 @@ const photoCount = homepageEntry.data.photos.length;
     lightbox.addEventListener('click', function(e) {
       if (e.target === lightbox) closeLightbox();
     });
+
+    // Touch swipe navigation
+    var touchStartX = 0;
+    var touchStartY = 0;
+    var lbStage = document.querySelector('.lb-stage');
+    lbStage.addEventListener('touchstart', function(e) {
+      touchStartX = e.changedTouches[0].clientX;
+      touchStartY = e.changedTouches[0].clientY;
+    }, { passive: true });
+    lbStage.addEventListener('touchend', function(e) {
+      var dx = e.changedTouches[0].clientX - touchStartX;
+      var dy = e.changedTouches[0].clientY - touchStartY;
+      // Horizontal swipe only, with a minimum distance
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+        if (dx < 0) nextImage();
+        else prevImage();
+      }
+    }, { passive: true });
 
     document.addEventListener('keydown', function(e) {
       if (!lightbox.classList.contains('active')) return;

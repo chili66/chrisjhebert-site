@@ -1,5 +1,6 @@
 ---
 title: Barton Stacey
+order: 1
 cover: /images/barton_stacey/web/barton_stacey_lr.0001.jpg
 aspectRatio: "3/2"
 images:

@@ -1,5 +1,6 @@
 ---
 title: Extension of a Man
+order: 5
 cover: /images/extension_of_a_man/linton_kwesi_johnson.jpg
 aspectRatio: "3/2"
 images:
