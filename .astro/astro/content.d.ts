@@ -201,6 +201,13 @@ declare module 'astro:content' {
 } & { render(): Render[".md"] };
 };
 "series": {
+"13-stores-in-chinatown.md": {
+	id: "13-stores-in-chinatown.md";
+  slug: "13-stores-in-chinatown";
+  body: string;
+  collection: "series";
+  data: InferEntrySchema<"series">
+} & { render(): Render[".md"] };
 "barton-stacey.md": {
 	id: "barton-stacey.md";
   slug: "barton-stacey";
@@ -239,6 +246,20 @@ declare module 'astro:content' {
 "rhizome.md": {
 	id: "rhizome.md";
   slug: "rhizome";
+  body: string;
+  collection: "series";
+  data: InferEntrySchema<"series">
+} & { render(): Render[".md"] };
+"salton-sea.md": {
+	id: "salton-sea.md";
+  slug: "salton-sea";
+  body: string;
+  collection: "series";
+  data: InferEntrySchema<"series">
+} & { render(): Render[".md"] };
+"united-palace-cathedral.md": {
+	id: "united-palace-cathedral.md";
+  slug: "united-palace-cathedral";
   body: string;
   collection: "series";
   data: InferEntrySchema<"series">

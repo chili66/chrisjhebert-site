@@ -1,5 +1,6 @@
 ---
 title: Rhizome
+order: 6
 cover: /images/rhizome/rhizome_web_0001.jpg
 aspectRatio: "3/2"
 images:

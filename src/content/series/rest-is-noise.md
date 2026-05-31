@@ -1,5 +1,6 @@
 ---
 title: The Rest Is Noise
+order: 8
 cover: /images/rest_is_noise/rest_is_noise_0001.jpg
 aspectRatio: "3/2"
 images:

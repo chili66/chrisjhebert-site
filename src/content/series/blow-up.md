@@ -1,5 +1,6 @@
 ---
 title: Blow Up
+order: 2
 cover: /images/blow_up/blow_up.01.jpg
 aspectRatio: "16/9"
 images:
