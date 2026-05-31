@@ -44,4 +44,32 @@ images:
     alt: ""
   - image: /images/salton_sea/salton_sea.0020.jpg
     alt: ""
+  - image: /images/salton_sea/salton_sea.0021.jpg
+    alt: ""
+  - image: /images/salton_sea/salton_sea.0022.jpg
+    alt: ""
+  - image: /images/salton_sea/salton_sea.0023.jpg
+    alt: ""
+  - image: /images/salton_sea/salton_sea.0024.jpg
+    alt: ""
+  - image: /images/salton_sea/salton_sea.0025.jpg
+    alt: ""
+  - image: /images/salton_sea/salton_sea.0026.jpg
+    alt: ""
+  - image: /images/salton_sea/salton_sea.0027.jpg
+    alt: ""
+  - image: /images/salton_sea/salton_sea.0028.jpg
+    alt: ""
+  - image: /images/salton_sea/salton_sea.0029.jpg
+    alt: ""
+  - image: /images/salton_sea/salton_sea.0030.jpg
+    alt: ""
+  - image: /images/salton_sea/salton_sea.0031.jpg
+    alt: ""
+  - image: /images/salton_sea/salton_sea.0032.jpg
+    alt: ""
+  - image: /images/salton_sea/salton_sea.0033.jpg
+    alt: ""
+  - image: /images/salton_sea/salton_sea.0034.jpg
+    alt: ""
 ---
